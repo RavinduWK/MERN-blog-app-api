@@ -10,7 +10,7 @@ const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const Post = require("./models/Post");
-const coonetDB = require("./config/dbConn");
+const connectDB = require("./config/dbConn");
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "ihudcvlqeqw524dfvekjb";
