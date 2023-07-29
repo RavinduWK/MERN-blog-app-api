@@ -12,6 +12,7 @@ const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const Post = require("./models/Post");
 const connectDB = require("./config/dbConn");
+const PORT = process.env.PORT || 4000;
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "ihudcvlqeqw524dfvekjb";
@@ -150,10 +151,4 @@ mongoose.connection.once("open", () => {
 
 mongoose.connection.on("error", (err) => {
   console.log(err);
-  logEvents(
-    `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
-    "mongoErrLog.log"
-  );
 });
-
-app.listen(4000);
