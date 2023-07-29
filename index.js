@@ -22,7 +22,7 @@ connectDB();
 app.use(
   cors({
     credentials: true,
-    origin: "https://wickramblogs.onrender.com/",
+    origin: "https://wickramblogs.onrender.com",
   })
 );
 app.use(express.json());
