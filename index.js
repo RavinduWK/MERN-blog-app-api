@@ -21,7 +21,7 @@ connectDB();
 app.use(
   cors({
     credentials: true,
-    origin: "https://mern-blog-app-xvca.onrender.com/",
+    origin: "https://wickramblogs.onrender.com/",
   })
 );
 app.use(express.json());
