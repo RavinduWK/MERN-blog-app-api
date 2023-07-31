@@ -122,7 +122,6 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
       summary,
       content,
       cover: newPath ? newPath : postDoc.cover,
-      author: info.id,
     });
 
     res.json(postDoc);
