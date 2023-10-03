@@ -10,7 +10,6 @@ const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const Post = require("./models/Post");
-const connectDB = require("./config/dbConn");
 const PORT = process.env.PORT || 4000;
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -22,7 +21,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-connectDB();
+mongoose
+  .connect(process.env.DATABASE_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+  });
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
