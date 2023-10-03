@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -13,21 +12,17 @@ const fs = require("fs");
 const Post = require("./models/Post");
 const connectDB = require("./config/dbConn");
 const PORT = process.env.PORT || 4000;
+const CLIENT_URL = process.env.CLIENT_URL;
 
 const salt = bcrypt.genSaltSync(10);
-const secret = "ihudcvlqeqw524dfvekjb";
+const secret = process.env.SECRET;
 
-connectDB();
-
-app.use(
-  cors({
-    credentials: true,
-    origin: "https://wickramblogs.onrender.com",
-  })
-);
+app.use(cors({ credentials: true, origin: CLIENT_URL }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
+
+connectDB();
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -49,6 +44,7 @@ app.post("/login", async (req, res) => {
   const userDoc = await User.findOne({ username });
   const passOk = bcrypt.compareSync(password, userDoc.password);
   if (passOk) {
+    // logged in
     jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
       if (err) throw err;
       res.cookie("token", token).json({
@@ -144,11 +140,6 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 });
 
-mongoose.connection.once("open", () => {
-  console.log("Connected to MongoDB");
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
-
-mongoose.connection.on("error", (err) => {
-  console.log(err);
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
