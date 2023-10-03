@@ -16,7 +16,18 @@ const CLIENT_URL = process.env.CLIENT_URL;
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
-app.use(cors({ credentials: true, origin: CLIENT_URL }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (origin === CLIENT_URL || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS Blocked"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -32,6 +43,12 @@ mongoose
   .catch((error) => {
     console.error("Error connecting to MongoDB:", error);
   });
+
+app.use((err, req, res, next) => {
+  // Error handling middleware
+  console.error(err.stack);
+  res.status(500).send({ error: err.message });
+});
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
